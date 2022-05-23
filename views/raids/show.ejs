@@ -1,0 +1,226 @@
+<nav class="font-bold mb-2">
+    <ol class="list-none p-0 inline-flex">
+        <li class="flex items-center text-lg">
+            Manage Raid<span class="text-gray-500 ml-1">#<%= raid.id %></span>
+        </li>
+    </ol>
+</nav>
+<div class="grid grid-flow-col grid-cols-2 gap-4">
+    <!-- Signups -->
+    <div x-data="signups()" class="bg-gray-700 rounded-lg p-5">
+        <h2 class="text-xl text-blue-200 font-bold mb-4 lg:mb-6">Signups</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 2xl:gap-8 max-w-xl">
+            <% signups.forEach(function(group) { %>
+            <div class="col-span-1 bg-gray-700 rounded-lg">
+                <h4 class="text-lg"><%= group.className %>s</h4>
+                <% group.contents.forEach(function(signup) { %>
+                    <div class="my-0 p-1 pb-2 mb-1 rounded-lg bg-gray-800 border-2 border-gray-800 hover:bg-gray-900 cursor-pointer" @click="add({ userId: '<%= signup.userId %>' })"
+                        :class="{ 'bg-gray-900 border-indigo-600': members.some(obj => obj.userId === '<%= signup.userId %>') }">
+                        <img class="inline mx-0 rounded-lg" src="/images/icons/<%= signup.classEmoji %>.jpg" />
+                        <img class="inline mx-0 rounded-lg" src="/images/icons/<%= signup.intentEmoji %>.jpg" />
+                        <span class="bg-gray-900 rounded-lg text-xs px-1"><%= signup.number %></span>
+                        <span class="text-sm align-middle"><%= signup.name %></span>
+                    </div>
+                <% }) %>
+            </div>
+            <% }) %>
+            <% if (signups.length == 0) { %>
+                No signups.
+            <% } %>
+        </div>
+        <button class="bg-indigo-500 rounded-lg font-bold text-white text-center px-6 py-2 transition duration-300 ease-in-out hover:bg-indigo-600 mt-4" x-show="members.length > 0" @click="save()">
+            Add (<span x-text="members.length"></span>) To Roster
+        </button>
+    </div>
+    <!-- Roster -->
+    <div x-data="roster()" class="bg-gray-700 rounded-lg p-5">
+        <h2 class="text-xl text-blue-200 font-bold mb-4 lg:mb-6">Roster</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 2xl:gap-8 max-w-xl">
+            <% members.forEach(function(group) { %>
+            <div class="col-span-1 bg-gray-700 rounded-lg">
+                <h4 class="text-lg"><%= group.className %>s</h4>
+                <% group.contents.forEach(function(member) { %>
+                    <div class="my-0 mb-3 flex">
+                        <% if (member.confirmed) { %><i class="bg-green-600 rounded-lg px-1 w-7 mr-1 mt-1" data-feather="check"></i><% } %>
+                        <% if (member.rejected) { %><i class="bg-red-600 rounded-lg px-1 w-7 mr-1 mt-1" data-feather="x"></i><% } %>
+                        <% if (member.undecided) { %><i class="bg-gray-600 rounded-lg px-1 w-7 mr-1 mt-1" data-feather="circle"></i><% } %>
+                        <div class="w-full p-1 pb-2 rounded-lg bg-gray-800 border-2 border-gray-800 hover:bg-gray-900 cursor-pointer overflow-hidden"
+                            @click="add({ userId: '<%= member.userId %>' })"
+                            :class="{ 'bg-gray-900 border-indigo-600': members.some(obj => obj.userId === '<%= member.userId %>') }">
+                            <img class="inline mx-0 rounded-lg" src="/images/icons/<%= member.classEmoji %>.jpg" />
+                            <img class="inline mx-0 rounded-lg" src="/images/icons/<%= member.intentEmoji %>.jpg" />
+                            <span class="bg-gray-900 rounded-lg text-xs px-1"><%= member.number %></span>
+                            <span class="text-sm align-middle"><%= member.name %> <i class="fas fa-check-square"></i></span>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+            <% }) %>
+            <% if (members.length == 0) { %>
+                Empty roster.
+            <% } %>
+        </div>
+        <% if (raid.rosterMessageId || members.length > 0) { %>
+        <div @keydown.escape="isDialogOpen = false">
+            <div class="overflow-auto" style="background-color: rgba(0,0,0,0.5)" x-show="isDialogOpen" :class="{ 'absolute inset-0 z-10 flex items-start justify-center': isDialogOpen }">
+                <div class="mt-64 max-w-xl w-full bg-gray-900 shadow-lg z-50 rounded-lg overflow-hidden" x-show="isDialogOpen" @click.away="isDialogOpen = false">
+                    <div class="p-4 flex space-x-4 md:flex-row flex-col md:text-left text-center items-center">
+                        <div>
+                            <h1 class="text-xl font-semibold tracking-wide text-blue-200">
+                                Confirm Action
+                            </h1>
+                            <p class="text-gray-500">
+                                This action will update the roster message in discord. Are you sure you want to continue?
+                            </p>
+                        </div>
+                    </div>
+                    <div class="p-3 bg-gray-50 text-right md:space-x-2 md:block flex flex-col-reverse">
+                        <button class="px-4 md:py-1.5 py-2 bg-white text-black rounded-lg focus:ring-offset-2 focus:outline-none focus:ring-2 focus:ring-blue-800 hover:bg-gray-50" @click="isDialogOpen = false">
+                            Cancel
+                        </button>
+                        <button class="mb-2 md:mb-0 px-4 md:py-1.5 py-2 bg-indigo-500 text-white rounded-lg focus:ring-offset-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 hover:bg-indigo-600"
+                            <% if (raid.rosterMessageId) { %>@click="update()"<% } else { %>@click="publish()"<% } %>>
+                            Continue
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% } %>
+        <% if (!raid.rosterMessageId && members.length > 0) { %>
+        <button class="bg-indigo-500 rounded-lg font-bold text-white text-center px-6 py-2 transition duration-300 ease-in-out hover:bg-indigo-600 mt-8" @click="isDialogOpen = true">
+            Publish Roster
+        </button>
+        <% } %>
+        <% if (raid.rosterMessageId) { %>
+        <button class="bg-indigo-500 rounded-lg font-bold text-white text-center px-6 py-2 transition duration-300 ease-in-out hover:bg-indigo-600 mt-8" @click="isDialogOpen = true">
+            Update Roster
+        </button>
+        <% } %>
+        <button class="bg-white rounded-lg text-black font-bold text-center px-6 py-2 transition duration-300 ease-in-out hover:bg-gray-300 mt-8" x-show="members.length > 0" @click="remove()">
+            Remove Selected (<span x-text="members.length"></span>)
+        </button>
+    </div>
+</div>
+<div x-data="actions()" class="bg-gray-700 rounded-lg px-4 lg:px-8 py-4 lg:py-6 mt-8 flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-12">
+    <nav class="md:flex md:space-x-4 space-y-2 md:space-y-0">
+        <% if (raid.active) { %>
+        <button @click="closeSignups()" class="inline-flex flex-col justify-center items-center px-4 py-4 border border-gray-600 rounded-lg hover:bg-gray-800 w-48">
+            <i class="mb-1" data-feather="x-octagon"></i>
+            <span class="text-blue-100 opacity-70 text-center">
+                Close Signups
+            </span>
+        </button>
+        <% } else { %>
+        <button @click="reopenSignups()" class="inline-flex flex-col justify-center items-center px-4 py-4 border border-gray-600 rounded-lg hover:bg-gray-800 w-48">
+            <i class="mb-1" data-feather="check-square"></i>
+            <span class="text-blue-100 opacity-70 text-center">
+                Reopen Signups
+            </span>
+        </button>
+        <% } %>
+        <button @click="delete()" class="inline-flex flex-col justify-center items-center px-4 py-4 border border-gray-600 rounded-lg hover:bg-gray-800 w-48">
+            <i class="mb-1" data-feather="trash-2"></i>
+            <span class="text-blue-100 opacity-70">
+                Delete Raid
+            </span>
+        </button>
+    </nav>
+</div>
+<script>
+    function actions() {
+        return {
+            closeSignups() {
+                // Add members to roster
+                fetch('/roster/closeSignups', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ raidId: <%= raid.id %> })
+                }).then(() => {
+                    window.location.reload(true);
+                });
+            },
+            reopenSignups() {
+                // Add members to roster
+                fetch('/roster/reopenSignups', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ raidId: <%= raid.id %> })
+                }).then(() => {
+                    window.location.reload(true);
+                });
+            }
+        }
+    }
+
+    function signups() {
+        return {
+            members: [],
+            add(contents) {
+                if (this.members.some(obj => obj.userId === contents.userId)) {
+                    let memberIndex = this.members.findIndex(obj => obj.userId === contents.userId);
+                    this.members.splice(memberIndex, 1);
+                } else {
+                    this.members.push(contents);
+                }
+            },
+            async save() {
+                if (this.members.length === 0) return;
+
+                // Add members to roster
+                fetch('/roster/save', {
+                    method: 'POST',
+				    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ members: this.members, raidId: <%= raid.id %> })
+                }).then(() => {
+                    window.location.reload(true);
+                });
+            }
+        }
+    }
+
+    function roster() {
+        return {
+            members: [],
+            isDialogOpen: false,
+            add(contents) {
+                if (this.members.some(obj => obj.userId === contents.userId)) {
+                    let memberIndex = this.members.findIndex(obj => obj.userId === contents.userId);
+                    this.members.splice(memberIndex, 1);
+                } else {
+                    this.members.push(contents);
+                }
+            },
+            async publish() {
+                fetch('/roster/publish', {
+                    method: 'POST',
+				    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ raidId: <%= raid.id %> })
+                }).then(() => {
+                    window.location.reload(true);
+                });
+            },
+            async update() {
+                fetch('/roster/update', {
+                    method: 'POST',
+				    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ raidId: <%= raid.id %> })
+                }).then(() => {
+                    window.location.reload(true);
+                });
+            },
+            async remove() {
+                if (this.members.length === 0) return;
+
+                // Remove members from roster
+                fetch('/roster/remove', {
+                    method: 'POST',
+				    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ members: this.members, raidId: <%= raid.id %> })
+                }).then(() => {
+                    window.location.reload(true);
+                });
+            }
+        }
+    }
+</script>

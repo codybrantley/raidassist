@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>RaidAssist.Me - Discord Raid Scheduling & Signups Bot</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Accept-CH" content="DPR,Width,Viewport-Width" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.2/dist/alpine.min.js" defer></script>
+    <script src="https://unpkg.com/feather-icons@4.28.0/dist/feather.min.js"></script>
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet" />
+
+    <!--STYLES-->
+    <link rel="stylesheet" href="/styles/importer.css">
+    <!--STYLES END-->
+  </head>
+
+  <body class="font-sans">
+      <div id="content">
+          <!-- mobile bar -->
+          <div class="bg-gray-900 py-3 px-4 text-blue-100">
+              <div class="container mx-auto flex items-center justify-between">
+                  <h2 class="text-lg font-extrabold">RaidAssist.Me</h2>
+                  <span class="flex flex-row items-center justify-center xl:justify-start space-x-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-60">
+                      <img
+                          class="h-8 w-8 rounded-full object-cover"
+                          src="<%= (req.user.avatar) ? "https://cdn.discordapp.com/avatars/" + req.user.discordId + "/" + req.user.avatar + ".png" : "https://cdn.discordapp.com/embed/avatars/" + sails.helpers.modulo5(req.user.discriminator) + ".png" %>" />
+                      <h2 class="text-lg vertical-middle dark:text-gray-300 font-extrabold capitalize">
+                          Hello, <%= req.user.username %>#<%= req.user.discriminator %>
+                          <a href="/auth/logout" class="block m-0 text-xs italic text-gray-500">→ Logout</a>
+                      </h2>
+                  </span>
+              </div>
+          </div>
+          <!--/ mobile bar-->
+          <div class="flex min-h-screen font-semibold text-blue-100 text-base subpixel-antialiased">
+              <div class="flex-1 flex bg-gray-800 py-8 px-4">
+                  <!-- main content -->
+                  <div class="container mx-auto">
+                      <nav class="mb-8">
+                          <ul class="text-base pt-2 grid gap-4 grid-cols-3">
+                              <li>
+                                  <a href="/dashboard" class="<% if (req.path.includes('/dashboard')) { %>bg-gray-700 text-blue-100<% } else { %>bg-gray-900 hover:bg-gray-700 text-blue-200<% } %> hover:bg-blue-50 transition-colors duration-100 flex items-end py-3 px-4 space-x-2 rounded-lg font-bold">
+                                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M3 3V9H21V3H3ZM19 5H5V7H19V5Z" fill="currentColor" /><path fill-rule="evenodd" clip-rule="evenodd" d="M3 11V21H11V11H3ZM9 13H5V19H9V13Z" fill="currentColor" /><path d="M21 11H13V13H21V11Z" fill="currentColor" /><path d="M13 15H21V17H13V15Z" fill="currentColor" /><path d="M21 19H13V21H21V19Z" fill="currentColor" /></svg>
+                                      <span class="flex-1">
+                                          Dashboard
+                                      </span>
+                                  </a>
+                              </li>
+                              <li>
+                                  <a href="/raids" class="<% if (req.path.includes('/raids')) { %>bg-gray-700 text-blue-100<% } else { %>bg-gray-900 hover:bg-gray-700 text-blue-200<% } %> transition-colors duration-100 flex items-end py-3 px-4 space-x-2 rounded-lg font-bold text-opacity-70 hover:text-opacity-100">
+                                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 11C10.2091 11 12 9.20914 12 7C12 4.79086 10.2091 3 8 3C5.79086 3 4 4.79086 4 7C4 9.20914 5.79086 11 8 11ZM8 9C9.10457 9 10 8.10457 10 7C10 5.89543 9.10457 5 8 5C6.89543 5 6 5.89543 6 7C6 8.10457 6.89543 9 8 9Z" fill="currentColor" /><path d="M11 14C11.5523 14 12 14.4477 12 15V21H14V15C14 13.3431 12.6569 12 11 12H5C3.34315 12 2 13.3431 2 15V21H4V15C4 14.4477 4.44772 14 5 14H11Z" fill="currentColor" /><path d="M22 11H16V13H22V11Z" fill="currentColor" /><path d="M16 15H22V17H16V15Z" fill="currentColor" /><path d="M22 7H16V9H22V7Z" fill="currentColor" /></svg>
+                                      <span class="flex-1">
+                                          Raids
+                                      </span>
+                                  </a>
+                              </li>
+                              <li>
+                                  <a href="/settings" class="<% if (req.path.includes('/settings')) { %>bg-gray-700 text-blue-100<% } else { %>bg-gray-900 hover:bg-gray-700 text-blue-200<% } %> transition-colors duration-100 flex items-end py-3 px-4 space-x-2 rounded-lg font-bold text-opacity-70 hover:text-opacity-100">
+                                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M7 3C8.86384 3 10.4299 4.27477 10.874 6H19V8H10.874C10.4299 9.72523 8.86384 11 7 11C4.79086 11 3 9.20914 3 7C3 4.79086 4.79086 3 7 3ZM7 9C8.10457 9 9 8.10457 9 7C9 5.89543 8.10457 5 7 5C5.89543 5 5 5.89543 5 7C5 8.10457 5.89543 9 7 9Z" fill="currentColor" /><path fill-rule="evenodd" clip-rule="evenodd" d="M17 20C15.1362 20 13.5701 18.7252 13.126 17H5V15H13.126C13.5701 13.2748 15.1362 12 17 12C19.2091 12 21 13.7909 21 16C21 18.2091 19.2091 20 17 20ZM17 18C18.1046 18 19 17.1046 19 16C19 14.8954 18.1046 14 17 14C15.8954 14 15 14.8954 15 16C15 17.1046 15.8954 18 17 18Z" fill="currentColor" /></svg>
+                                      <span class="flex-1">
+                                          Settings
+                                      </span>
+                                  </a>
+                              </li>
+                          </ul>
+                      </nav>
+                      <%- body %>
+                  </div>
+                  <!--/ main content -->
+              </div>
+          </div>
+      </div>
+
+    <!--SCRIPTS-->
+    <script src="/dependencies/sails.io.js"></script>
+    <!--SCRIPTS END-->
+    <script>
+      feather.replace()
+    </script>
+  </body>
+</html>

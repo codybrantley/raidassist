@@ -1,0 +1,35 @@
+<% raids.forEach(function(raid) { %>
+<div class="bg-gray-700 rounded-lg px-4 lg:px-8 py-4 lg:py-6 mt-8">
+    <h3 class="text-xl text-blue-200 font-bold mb-2"><%= raid[0] %></h3>
+    <div class="overflow-x-auto">
+        <div class="align-middle inline-block min-w-full overflow-hidden">
+            <table class="min-w-full">
+                <thead class="text-left bg-gray-600">
+                    <tr>
+                        <th class="py-2 px-3">Id</th>
+                        <th class="py-2 px-3">Title</th>
+                        <th class="py-2 px-3">Start Date</th>
+                        <th class="py-2 px-3">Status</th>
+                        <th class="py-2 px-3">&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-600 text-blue-100 text-opacity-80 whitespace-nowrap">
+                    <% raid[1].forEach(function(raid) { %>
+                        <tr>
+                            <td class="py-3 px-3"><%= raid.id %></td>
+                            <td class="py-3 px-3"><%= raid.title %></td>
+                            <td class="py-3 px-3"><%= sails.helpers.formatDate(raid.startsAt) %></td>
+                            <td class="py-3 px-3">
+                                <span class="bg-green-200 text-green-600 text-xs rounded-full px-3 py-1 w-16 inline-block text-center uppercase"><%= raid.active %></span>
+                            </td>
+                            <td class="py-3 px-3">
+                                <a href="/raids/<%= raid.id %>" class="mr-4">View Roster</a>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<% }) %>
