@@ -11,6 +11,8 @@
 
 module.exports.globals = {
 
+  moment: true,
+
   /****************************************************************************
   *                                                                           *
   * Whether to expose the locally-installed Lodash as a global variable       *
@@ -29,7 +31,7 @@ module.exports.globals = {
   *                                                                           *
   ****************************************************************************/
 
-  async: false,
+  async: require('async'),
 
   /****************************************************************************
   *                                                                           *

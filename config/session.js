@@ -18,14 +18,14 @@ module.exports.session = {
   * of your users, forcing them to log in again.                             *
   *                                                                          *
   ***************************************************************************/
-  secret: sails.config.sessionSecret,
+  secret: '2d8d273a6450415fd31892eb2b005b5a',
 
-  adapter: 'connect-mongo',
-  url: 'mongodb://ra_user:sleek-posture-stable@127.0.0.1:27017/ra',
-  collection: 'sessions',
-  auto_reconnect: false,
-  ssl: false,
-  stringify: true,
+  // adapter: 'connect-mongo',
+  // url: 'mongodb://ra_user:sleek-posture-stable@127.0.0.1:27017/ra',
+  // collection: 'sessions',
+  // auto_reconnect: false,
+  // ssl: false,
+  // stringify: true,
 
 
   /***************************************************************************

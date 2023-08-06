@@ -101,7 +101,7 @@ module.exports.models = {
   ******************************************************************************/
 
   dataEncryptionKeys: {
-    default: sails.config.encryptionKey
+    default: 'tVdQbq2JptoPp4oXGT94kKqF72iV0VKY/cnp7SjL7Ik='
   },
 
 

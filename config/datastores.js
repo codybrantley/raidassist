@@ -13,6 +13,8 @@
  * https://sailsjs.com/config/datastores
  */
 
+require('dotenv').config();
+
 module.exports.datastores = {
 
 
@@ -52,7 +54,7 @@ module.exports.datastores = {
     // url: 'mysql://user:password@host:port/database',
 
     adapter: 'sails-mongo',
-    url: 'mongodb://ra_user:sleek-posture-stable@127.0.0.1:27017/ra'
+    url: process.env.MONGO_URL_STRING
 
   },
 
