@@ -204,6 +204,9 @@ module.exports = {
     //
     //--------------------------------------------------------------------------
 
+    adapter: '@sailshq/connect-redis',
+    url: 'redis://default:4D3x2Jm0A5h6O92SclONhuevubviaOph@redis-17733.c85.us-east-1-2.ec2.cloud.redislabs.com:17733',
+
 
 
     /***************************************************************************

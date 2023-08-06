@@ -9,6 +9,8 @@
  * https://sailsjs.com/config/session
  */
 
+require('dotenv').config();
+
 module.exports.session = {
 
   /***************************************************************************
@@ -20,13 +22,8 @@ module.exports.session = {
   ***************************************************************************/
   secret: '2d8d273a6450415fd31892eb2b005b5a',
 
-  // adapter: 'connect-mongo',
-  // url: 'mongodb://ra_user:sleek-posture-stable@127.0.0.1:27017/ra',
-  // collection: 'sessions',
-  // auto_reconnect: false,
-  // ssl: false,
-  // stringify: true,
-
+  adapter: '@sailshq/connect-redis',
+  url: 'redis://default:4D3x2Jm0A5h6O92SclONhuevubviaOph@redis-17733.c85.us-east-1-2.ec2.cloud.redislabs.com:17733',
 
   /***************************************************************************
   *                                                                          *
